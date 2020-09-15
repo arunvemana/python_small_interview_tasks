@@ -12,3 +12,4 @@
 
 **_Note:_** Input date formate is http://127.0.0.1:5000/api?date=09-03-2000.
 * http://127.0.0.1:5000/api (Default take *Today* date from datetime)
+* http://127.0.0.1:5000/api/audit --> TO DISPLAY THE STORED AUDIT DATA ALONG WITH DATE.
