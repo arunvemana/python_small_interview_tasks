@@ -1,0 +1,5 @@
+# Question
+Write a Python script using nested for loop to create a chess board,
+ use table width = 270px and take 30px as cell height and width.
+ You need to output HTML in a file on the local file system which
+ when opened in the browser looks like a chess board.
