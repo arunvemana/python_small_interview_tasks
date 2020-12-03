@@ -1,0 +1,79 @@
+<html>
+
+<head>
+    <title>Dvara Django Task</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            padding: 50px;
+            background-color: #fcfcfc;
+            color: #000;
+        }
+        
+        .center-box {
+            margin: 0 auto;
+            max-width: 600px;
+            height: 170px;
+            background-color: #ddd;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="center-box">
+    <h1>Dvara Task</h1>
+
+    {% if form %}
+    <h3>Provide the data to the database by uploading the file</h3>
+    <p>Functionality:-</p>
+    <ul>
+        <li>Read the give Excel Sheet</li>
+        <li>check table exist or not for the given sheet names. if yes</li>
+        <li>load the data in there respective tables</li>
+        <li>
+            Right now data duplication is allowed because of to test multi load of the same data. But relationship won't disturb
+        </li>
+        <li>Dropdown functionality was implement by the ajax call</li>
+    </ul>
+    <p>Read the given Excel sheet</p>
+    <form method="POST" , enctype="multipart/form-data">
+        {% csrf_token %} {{form}}
+        <button>submit</button>
+    </form>
+    <select name="course" id="select2" data-fees-url="{% url 'sub_category_list' %}" required class="form-control">
+      <option value="">Select category</option>
+      {% for course in category %}
+      <option value="{{course.id}}">{{course.category_name}}</option>
+      {% endfor %}
+    </select>
+    <select name="total_fee" id="select3" required class="form-control">
+      <option value="">Select Fee</option>
+    </select> {%elif data %}
+
+    <p>sucessful</p>
+    <input id="btntest" type="button" value="refresh" onclick="window.location.href = 'http://127.0.0.1:8000/'" /> {%else%} data
+    <p>failure</p>
+    <input id="btntest" type="button" value="refresh" onclick="window.location.href = 'http://127.0.0.1:8000/'" /> {%endif%}
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        $("#select2").change(function() {
+            var url = $("#select2").attr("data-fees-url"); // get the url of the ajax_load_course_fees view
+            var cat_id = $(this).val(); // get the selected course pk from the HTML input
+
+            $.ajax({
+                // initialize an AJAX request
+                url: url, // set the url of the request
+                data: {
+                    cat_id: cat_id, // add the course pk to the GET parameters
+                },
+                success: function(data) {
+                    // `data` is the return of the `ajax_course_fees` view function
+                    $("#select3").html(data); // replace the contents of the fees select with the data that came from the server
+                },
+            });
+        });
+    </script>
+</body>
+
+</html>
