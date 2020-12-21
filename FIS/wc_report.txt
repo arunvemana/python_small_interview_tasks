@@ -1,0 +1,13 @@
+Decreased order of words and there count
+the:11
+of:8
+lorem:6
+ipsum:6
+in:6
+from:6
+a:5
+and:4
+by:4
+is:3
+Total No.of words = 176
+Total No.of Unquie Words = 106
