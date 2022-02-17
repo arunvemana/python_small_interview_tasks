@@ -1,0 +1,55 @@
+{% load static %}
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="{% static 'stocks/index_css.css' %}"/>
+
+<!------ Include the above in your HEAD tag ---------->
+<div class="container">
+    <div class="row">
+        <div class="well">
+            <h1 class="text-center">Vote for your favorite</h1>
+            <div class="list-group">
+                {% for stock in stock_list %}
+                <a class="list-group-item">
+                    <div class="col-md-6">
+                        <h4 class="list-group-item-heading"> NSE</h4>
+                        <p class="list-group-item-text"><span class="glyphicon glyphicon-upload"
+                                                              style="color:green"></span>upvalue
+                            <span class="glyphicon glyphicon-download" style="color:red"></span>down
+                        </p>
+                    </div>
+                    <div class="col-md5">
+                        <div class="text-right">
+                            <button type="button" id="{{stock.id}}" onclick="alertwindow(this)" class="btn btn-default btn-lg">Question?</button>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="bg-modal">
+	<div class="modal-contents">
+
+		<div class="close">+</div>
+        <p>leave ur queston here for Stock <span id="ModleStockName"></span></p>
+
+		<form action={% url 'form' %} method="post" id="QuestionForm">
+        {% csrf_token %}
+            <input name="stockid" id="ModelStockID" type="hidden">
+			<input name="name" type="text" placeholder="Name">
+			<input name="email" type="email" placeholder="E-Mail">
+			<button type="submit" form="QuestionForm" class="button">Submit</button>
+		</form>
+        <p id="Message"></p>
+
+	</div>
+</div>
+
+<form action={% url 'form' %} method="POST">
+    <button type="button">submit</button>
+</form>
+<script src="{% static 'stocks/index_js.js' %}"></script>
