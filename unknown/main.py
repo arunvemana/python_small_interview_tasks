@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from typing import List
 
-engine = create_engine('sqlite:///test.db', echo=True)
+engine = create_engine('sqlite:///test.db')
 Base = declarative_base()
 Session = sessionmaker(bind=engine)
 
@@ -54,26 +54,74 @@ class ABM:
             return False
 
 
-class Transcation(ABM):
-    def deposit(self):
-        pass
+class Transcation:
+    def __init__(self):
+        self.session = Session()
 
-    def withdraw(self):
-        pass
+    def deposit(self, account_no, amount):
+        self.session.query(Account).filter(Account.account_no == account_no).update(
+            {Account.amount: Account.amount + amount}, synchronize_session='evaluate')
+        self.session.commit()
 
-    def checkbalance(self):
-        pass
+    def withdraw(self, account_no, amount):
+        original_balance = self.checkbalance(account_no)
+        if original_balance >= amount:
+            self.session.query(Account).filter(Account.account_no == account_no).update(
+                {Account.amount: Account.amount - amount}, synchronize_session='evaluate')
+            self.session.commit()
+
+    def checkbalance(self, account_no):
+        user = self.session.query(Account).filter(Account.account_no == account_no).first()
+        return user.amount
+
+    def transfer(self, original_account_no, balance, trans_account_no):
+        original_bal = self.checkbalance(original_account_no)
+        if original_bal >= balance:
+            self.withdraw(original_account_no, balance)
+            self.deposit(trans_account_no, balance)
+            return "Transfer complete"
+        else:
+            return "Not sufficient balance"
 
 
 if __name__ == '__main__':
     Base.metadata.create_all(bind=engine)
     run = ABM()
-    account_no = run.check_account("abc")
+    original_account_no = input("Provide account no to login:")
+    account_no = run.check_account(original_account_no)
     if account_no:
-        user_pin = "1234"
-        check = run.check_account(account_no, user_pin)
+        user_pin = input("Provide the pin for account!")
+        check = run.check_pin(account_no, user_pin)
         if check:
             print("what u want to do")
-            print()
+            trans = Transcation()
+            while True:
+                options = input("Choose Options\n1.Deposit\n2.withdraw\n3.checkBalance\n4.transfer\n5.quit")
+                if options == '1' or options.lower() == 'deposit':
+                    print("Deposit")
+                    try:
+                        amount = int(input("how much u want to deposit"))
+                    except ValueError as _:
+                        print("Provide only int value")
+                    trans.deposit("12234324", amount)
+                elif options == '2' or options.lower() == 'withdraw':
+                    print("withdraw")
+                    try:
+                        amount = int(input("how much u want to withdraw"))
+                    except ValueError as _:
+                        print("Provide only int value")
+                    trans.withdraw("12234324", amount)
+                elif options == '3' or options.lower() == 'checkbalance':
+                    print("checkbalance")
+                    print(trans.checkbalance(original_account_no))
+                elif options == '4' or options.lower() == 'transfer':
+                    transfer_account = input("Enter which account to transfer")
+                    try:
+                        amount = int(input("Amount to transfer"))
+                    except ValueError as _:
+                        print("Provide only int value")
+                    print(trans.transfer(original_account_no, amount, transfer_account))
+                else:
+                    break
     else:
         print("no account was found on the number")
