@@ -19,3 +19,4 @@
 13. [blackbucket_Insight](blackbucket_Insight/Assignment.docx)
 14. [collabera](collabera/Readme.md)
 15. [Prodapt](Prodapt/Readme.md)
+16. [Diversey](Diversey/questions.jpg)
