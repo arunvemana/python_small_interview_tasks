@@ -68,7 +68,7 @@ def Purchase():
                 _purchased.Brand = brand_name
                 _purchased.Price = price
                 try:
-                    quantity = int(input("Please provide the Quantity of the "))
+                    quantity = int(input(f"Please provide the Quantity of the {brand_name} {product_name} "))
                 except ValueError as _:
                     raise NotaValidInpit("Provide as int and valid option")
                 _purchased.Quantity = quantity
